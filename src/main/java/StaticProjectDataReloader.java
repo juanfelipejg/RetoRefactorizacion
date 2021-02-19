@@ -17,11 +17,10 @@ public class StaticProjectDataReloader extends ProjectDataReloader {
         // load details every other reload attempt
         if (reloadsCounter % 2 == 0) {
             new Thread( new Runnable() {
-                
+
                 @Override
                 public void run() {
                     loadLoginStatistics();
-                    
                 }
             }).start();
         }

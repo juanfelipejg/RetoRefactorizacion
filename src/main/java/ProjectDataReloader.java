@@ -1,5 +1,11 @@
 
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
+
 
 
 /**
@@ -12,7 +18,9 @@ import java.util.Date;
  * 
  */
 public abstract class ProjectDataReloader {
-    
+
+
+    private static final Logger logger = LoggerFactory.getLogger(ProjectDataReloader.class);
     /**
      * Reload period is 30 seconds
      */
@@ -42,11 +50,10 @@ public abstract class ProjectDataReloader {
     public static ProjectDataReloader getReloaderForType(Project project) {
         
         ProjectType type = project.getType();
-        if (type.equals(ProjectType.STATIC)) {
+        if (type.equals(ProjectType.STATIC))
             return new StaticProjectDataReloader(project);
-        } else if (type.equals(ProjectType.LIVE)) {
+        if (type.equals(ProjectType.LIVE))
             return new LiveProjectDataReloader(project);
-        }
         return null;
     }
     
@@ -65,9 +72,9 @@ public abstract class ProjectDataReloader {
 
             @Override
             public void run() {
-                System.out.println("Starting project data reloading thread for project \"" + project.getName() + "\", type: "
-                    + project.getType());
-
+                logger.info("Starting project data reloading thread for project \"{}\", type: {}" ,project.getName() ,project.getType());
+                /*System.out.println("Starting project data reloading thread for project \"" + project.getName() + "\", type: "
+                        + project.getType());*/
                 while (!stopped) {
 
                     // remember the start time
@@ -77,9 +84,11 @@ public abstract class ProjectDataReloader {
 
                         // call a project-type-specific reloading procedure that reloads some of the project data from
                         // persistence
-                        System.out.println("Starting reloading for project " + project.getName());
+                        logger.info("Starting reloading for project {}",project.getName());
+                        //System.out.println("Starting reloading for project " + project.getName());
                         reloadProjectData();
-                        System.out.println("Done reloading for project " + project.getName());
+                        logger.info("Done reloading for project {}",project.getName());
+                        //System.out.println("Done reloading for project " + project.getName());
                         project.prettyPrint();
                         System.out.println();
 
@@ -90,8 +99,9 @@ public abstract class ProjectDataReloader {
                             }
                         }
                     } catch (Exception e) {
-                        System.err.println("Could not load project data for ptoject " + project.getName() + " : "
-                            + e.getMessage());
+                        logger.error("Could not load project data for ptoject {} : {}",project.getName(), e.getMessage());
+                        /*System.err.println("Could not load project data for ptoject " + project.getName() + " : "
+                            + e.getMessage());*/
                     }
 
                     // calculate the time taken for the reload
@@ -123,8 +133,8 @@ public abstract class ProjectDataReloader {
                     }
                     reloadsCounter++;
                 }
-
-                System.out.println("Stopped project persistence reloading thread for project \"" + project.getName() + "\"");
+                logger.info("Stopped project persistence reloading thread for project \"{}\"",project.getName());
+                //System.out.println("Stopped project persistence reloading thread for project \"" + project.getName() + "\"");
             }
         });
 
@@ -132,8 +142,10 @@ public abstract class ProjectDataReloader {
     }
     
     protected void loadProjectDetails() {
-        System.out.println("Loading project details for project " + project.getName());
-        System.out.println("(Talking to database and updating our project-related objects.)");
+        logger.info("Loading project details for project {}", project.getName());
+        //System.out.println("Loading project details for project " + project.getName());
+        logger.info("(Talking to database and updating our project-related objects.)");
+        //System.out.println("(Talking to database and updating our project-related objects.)");
         //this could be a lot of lines of code and involve collaborators, helpers, etc
         //...
         //...
@@ -157,8 +169,10 @@ public abstract class ProjectDataReloader {
     }
     
     protected void loadLastUpdateTime() {
-        System.out.println("Loading last update time for project " + project.getName());
-        System.out.println("(Checking the database to see when the data was last refreshed)");
+        logger.info("Loading last update time for project {}",project.getName());
+        //System.out.println("Loading last update time for project " + project.getName());
+        logger.info("(Checking the database to see when the data was last refreshed)");
+        //System.out.println("(Checking the database to see when the data was last refreshed)");
         // this might also be a lot of lines of code
         //...
         //...
@@ -178,9 +192,11 @@ public abstract class ProjectDataReloader {
     }
     
     protected void loadLoginStatistics() {
-        System.out.println("Loading login statistics for project " + project.getName());
-        System.out.println("(Talking to our login server via http request)");
-        // This might involve other collaborators/helpers to make the http request and 
+        logger.info("Loading login statistics for project {}",project.getName());
+        //System.out.println("Loading login statistics for project " + project.getName());
+        logger.info("(Talking to our login server via http request)");
+        //System.out.println("(Talking to our login server via http request)");
+        // This might involve other collaborators/helpers to make the http request and
         // handle the response.
         //...
         //...
